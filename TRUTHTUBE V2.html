@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TruthTube — Did You Get Clickbaited?</title>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:        #0a0a0a;
+      --bg-elevated:    #1a1a1a;
+      --bg-card:        #141414;
+      --bg-input:       #131313;
+      --bg-deep:        #0f0f0f;
+
+      --border-subtle:  rgba(255,255,255,0.06);
+      --border-medium:  rgba(255,255,255,0.11);
+      --border-strong:  rgba(255,255,255,0.22);
+      --border-card:    rgba(255,255,255,0.09);
+
+      --text-primary:   #ffffff;
+      --text-secondary: #888888;
+      --text-muted:     #444444;
+
+      --red:            #E50914;
+      --red-glow-sm:    rgba(229,9,20,0.32);
+      --red-glow-lg:    rgba(229,9,20,0.14);
+      --red-border:     rgba(229,9,20,0.55);
+
+      --green:          #22c55e;
+      --green-bg:       rgba(34,197,94,0.10);
+      --green-border:   rgba(34,197,94,0.30);
+
+      --orange:         #f97316;
+      --orange-bg:      rgba(249,115,22,0.10);
+      --orange-border:  rgba(249,115,22,0.30);
+
+      --danger:         #E50914;
+      --danger-bg:      rgba(229,9,20,0.10);
+      --danger-border:  rgba(229,9,20,0.30);
+
+      --verify-bg:      var(--red);
+      --verify-hover:   #ff1a26;
+      --verify-text:    #ffffff;
+
+      --badge-bg:       rgba(229,9,20,0.10);
+      --badge-text:     #ff6b73;
+      --badge-border:   rgba(229,9,20,0.25);
+
+      --font-headline:  'Helvetica Neue', 'Helvetica', 'Arial', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-ui:        'Helvetica Neue', 'Helvetica', 'Arial', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --radius-pill: 9999px;
+
+      --header-h:    68px;
+      --transition:  0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 16px; line-height: 1.4; letter-spacing: -0.01em;
+      min-height: 100dvh; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── RTL global overrides ── */
+    html[dir="rtl"] body { letter-spacing: 0; }
+    html[dir="rtl"] .header-right { margin-left: 0; margin-right: auto; }
+    html[dir="rtl"] header { flex-direction: row-reverse; }
+    html[dir="rtl"] .logo { flex-direction: row-reverse; }
+    html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    html[dir="rtl"] .hero-headline .line-thin,
+    html[dir="rtl"] .hero-headline .line-heavy { text-align: right; }
+    html[dir="rtl"] .hero-eyebrow { flex-direction: row-reverse; }
+    html[dir="rtl"] .stats-strip { direction: rtl; }
+    html[dir="rtl"] .input-wrap .clear-btn { right: auto; left: 18px; }
+    html[dir="rtl"] .url-input { padding: 0 26px 0 64px; text-align: right; }
+    html[dir="rtl"] .loading-step { flex-direction: row-reverse; }
+    html[dir="rtl"] .step-text { text-align: right; }
+    html[dir="rtl"] .result-meta-row,
+    html[dir="rtl"] .verdict-header,
+    html[dir="rtl"] .rec-header,
+    html[dir="rtl"] .dd-comment-header,
+    html[dir="rtl"] .deep-dive-trigger-left,
+    html[dir="rtl"] .rec-channel-row,
+    html[dir="rtl"] .rec-meta-row { flex-direction: row-reverse; }
+    html[dir="rtl"] .verdict-bullets { text-align: right; }
+    html[dir="rtl"] .verdict-bullet { flex-direction: row-reverse; }
+    html[dir="rtl"] .detail-cell { text-align: right; }
+    html[dir="rtl"] .dd-summary-block { flex-direction: row-reverse; text-align: right; }
+    html[dir="rtl"] .dd-script-line { flex-direction: row-reverse; }
+    html[dir="rtl"] .dd-script-text { text-align: right; }
+    html[dir="rtl"] .dd-tabs { flex-direction: row-reverse; }
+    html[dir="rtl"] .rec-score-pill { margin-left: 0; margin-right: auto; }
+    html[dir="rtl"] .rec-body { text-align: right; }
+    html[dir="rtl"] .rec-why { text-align: right; }
+    html[dir="rtl"] .footer-links { flex-direction: row-reverse; }
+    html[dir="rtl"] footer { flex-direction: row-reverse; }
+    html[dir="rtl"] .retry-row { flex-direction: row-reverse; }
+    html[dir="rtl"] .try-example-row { flex-direction: row-reverse; }
+    html[dir="rtl"] .deep-dive-trigger { flex-direction: row-reverse; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, transparent 35%, var(--bg-base) 100%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── i18n Loading Overlay ── */
+    #i18nOverlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-base);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    #i18nOverlay.hidden { opacity: 0; pointer-events: none; }
+    .i18n-spinner {
+      width: 32px; height: 32px;
+      border: 2px solid rgba(229,9,20,0.25); border-top-color: var(--red);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+
+    /* ══ HEADER ══════════════════════════════════════════════════════ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--header-h); z-index: 100;
+      display: flex; align-items: center; padding: 0 32px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(10,10,10,0.84);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+    .logo-icon {
+      width: 38px; height: 27px; border-radius: 6px; background: var(--red);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: box-shadow var(--transition);
+    }
+    .logo:hover .logo-icon { box-shadow: 0 0 20px rgba(229,9,20,0.55); }
+    .logo-icon svg { width: 11px; height: 11px; fill: #ffffff; margin-left: 1px; }
+    html[dir="rtl"] .logo-icon svg { margin-left: 0; margin-right: 1px; }
+    .logo-wordmark {
+      font-family: 'Calibri', 'Segoe UI', -apple-system, sans-serif;
+      font-weight: 700; font-size: 15.5px; letter-spacing: 0.13em;
+      text-transform: uppercase; line-height: 1; display: flex; align-items: baseline;
+    }
+    .logo-truth { color: #ffffff; }
+    .logo-tube  { color: #7a7a7a; }
+
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+    .back-btn {
+      display: none; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: var(--radius-md);
+      border: 1px solid var(--border-medium); background: transparent;
+      color: var(--text-secondary); font-family: var(--font-ui);
+      font-size: 13px; font-weight: 400; letter-spacing: -0.01em; cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .back-btn:hover { border-color: var(--border-strong); color: var(--text-primary); background: rgba(255,255,255,0.05); }
+    .back-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    html[dir="rtl"] .back-btn svg { transform: scaleX(-1); }
+    .back-btn.visible { display: flex; }
+
+    .beta-badge {
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: var(--radius-pill); background: var(--badge-bg); border: 1px solid var(--badge-border);
+      font-family: var(--font-ui); font-size: 10.5px; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase; color: var(--badge-text); user-select: none;
+    }
+
+    .lang-wrapper { position: relative; display: flex; align-items: center; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 7px; padding: 8px 14px;
+      border-radius: var(--radius-md); border: 1px solid var(--border-medium);
+      background: var(--bg-elevated); color: var(--text-primary);
+      font-family: var(--font-ui); font-size: 13px; font-weight: 400; letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+      appearance: none; -webkit-appearance: none; white-space: nowrap;
+    }
+    .lang-btn:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.06); }
+    .lang-btn:focus-visible { outline: 2px solid var(--red-border); outline-offset: 2px; }
+    .lang-flag { font-size: 16px; line-height: 1; }
+    .lang-caret { margin-left: 2px; opacity: 0.45; transition: transform var(--transition); }
+    html[dir="rtl"] .lang-caret { margin-left: 0; margin-right: 2px; }
+    .lang-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0; min-width: 240px;
+      background: var(--bg-elevated); border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg); padding: 6px; z-index: 200;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04);
+      display: none;
+      max-height: 360px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent;
+    }
+    .lang-dropdown::-webkit-scrollbar { width: 4px; }
+    .lang-dropdown::-webkit-scrollbar-track { background: transparent; }
+    .lang-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+    .lang-dropdown.open { display: block; animation: dropIn 0.16s ease; }
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .lang-option {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+      border-radius: var(--radius-md); cursor: pointer;
+      font-family: var(--font-ui); font-size: 13px; font-weight: 400; letter-spacing: -0.01em;
+      color: var(--text-secondary);
+      transition: background var(--transition), color var(--transition);
+    }
+    .lang-option:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+    .lang-option.active { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .lang-option .flag { font-size: 17px; line-height: 1; flex-shrink: 0; }
+    .lang-option .lang-name { flex: 1; font-weight: 400; }
+    .lang-option .lang-native { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0; }
+    .lang-option .active-check { width: 14px; height: 14px; flex-shrink: 0; opacity: 0; }
+    .lang-option.active .active-check { opacity: 1; }
+
+    /* ══ VIEWS ═══════════════════════════════════════════════════════ */
+    .view {
+      position: relative; z-index: 1; min-height: 100dvh;
+      display: none; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+      padding: calc(var(--header-h) + 48px) 48px 80px;
+      max-width: 1100px; margin: 0 auto; width: 100%;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .view.active  { display: flex; }
+    .view.visible { opacity: 1; }
+
+    /* ══ VIEW 1 — HOME ═══════════════════════════════════════════════ */
+    .hero { width: 100%; margin-bottom: 48px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;
+      font-family: var(--font-ui); font-size: 11.5px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary);
+    }
+    .hero-eyebrow-dot {
+      width: 14px; height: 14px; border-radius: 50%; background: var(--red);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-eyebrow-dot::after { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #ffffff; }
+    .hero-headline {
+      font-family: var(--font-headline); font-size: clamp(3.8rem, 10vw, 7.2rem);
+      line-height: 0.96; letter-spacing: -0.02em; text-transform: uppercase; color: #ffffff; margin-bottom: 0;
+    }
+    .hero-headline .line-thin  { display: block; font-weight: 400; letter-spacing: -0.01em; }
+    .hero-headline .line-heavy { display: block; font-weight: 800; letter-spacing: -0.03em; }
+
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px; width: 100%; max-width: 680px;
+      background: var(--border-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 48px;
+    }
+    .stat-card { background: var(--bg-card); padding: 22px 24px 20px; display: flex; flex-direction: column; gap: 6px; }
+    .stat-value { font-family: var(--font-headline); font-weight: 700; font-size: 2.2rem; line-height: 1; letter-spacing: -0.02em; color: #ffffff; }
+    .stat-label { font-family: var(--font-ui); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); }
+
+    .search-section { width: 100%; max-width: 680px; }
+    .input-wrap { position: relative; width: 100%; margin-bottom: 14px; }
+    .input-wrap::before {
+      content: ''; position: absolute; inset: -1.5px;
+      border-radius: calc(var(--radius-xl) + 1.5px);
+      border: 1.5px solid var(--red-border); pointer-events: none;
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .input-wrap::after {
+      content: ''; position: absolute; inset: -6px;
+      border-radius: calc(var(--radius-xl) + 6px);
+      box-shadow: 0 0 32px var(--red-glow-lg); pointer-events: none;
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .input-wrap:focus-within::before,
+    .input-wrap:focus-within::after { opacity: 1; }
+    .url-input {
+      width: 100%; height: 72px; padding: 0 64px 0 26px;
+      border-radius: var(--radius-xl); border: 1.5px solid var(--border-medium);
+      background: var(--bg-input); color: var(--text-primary);
+      font-family: var(--font-ui); font-size: 15px; font-weight: 400; letter-spacing: -0.01em;
+      caret-color: var(--red);
+      transition: border-color var(--transition), background var(--transition);
+      outline: none; appearance: none;
+    }
+    .url-input::placeholder { color: var(--text-muted); font-weight: 400; letter-spacing: -0.01em; }
+    .url-input:focus { border-color: transparent; background: #0f0f0f; }
+    .clear-btn {
+      position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.07); color: var(--text-secondary);
+      cursor: pointer; display: none; align-items: center; justify-content: center;
+      transition: background var(--transition), color var(--transition), transform 0.14s ease;
+    }
+    .clear-btn:hover { background: rgba(255,255,255,0.13); color: var(--text-primary); }
+    .clear-btn:active { transform: translateY(-50%) scale(0.88); }
+    .clear-btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; fill: none; }
+    .url-input:not(:placeholder-shown) ~ .clear-btn { display: flex; }
+    .verify-btn {
+      width: 100%; height: 66px; border-radius: var(--radius-xl); border: none;
+      background: var(--verify-bg); color: var(--verify-text);
+      font-family: var(--font-ui); font-size: 15px; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background var(--transition), box-shadow var(--transition), transform 0.14s ease;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(229,9,20,0.35), 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .verify-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, rgba(255,255,255,0.10) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .verify-btn:hover { background: var(--verify-hover); box-shadow: 0 6px 36px rgba(229,9,20,0.55), 0 2px 8px rgba(0,0,0,0.6); }
+    .verify-btn:active { transform: scale(0.982); box-shadow: 0 2px 14px rgba(229,9,20,0.30); }
+    .verify-icon { width: 21px; height: 21px; flex-shrink: 0; }
+    .verify-icon svg { width: 21px; height: 21px; stroke: var(--verify-text); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .try-example-row { margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+    .try-example-btn {
+      display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px;
+      border-radius: var(--radius-pill); border: 1px solid var(--border-medium);
+      background: transparent; color: var(--text-secondary);
+      font-family: var(--font-ui); font-size: 12.5px; font-weight: 400; letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .try-example-btn:hover { border-color: var(--border-strong); color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .try-example-btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .try-hint { font-size: 12px; color: var(--text-muted); letter-spacing: 0; }
+
+    /* ══ VIEW 2 — LOADING ════════════════════════════════════════════ */
+    #viewLoading { justify-content: center; align-items: flex-start; }
+    .loading-wrap { width: 100%; max-width: 560px; }
+    .loading-url-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .loading-url-display { font-size: 13px; color: var(--text-secondary); margin-bottom: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .loading-title { font-family: var(--font-headline); font-weight: 700; font-size: 1.6rem; letter-spacing: -0.02em; color: #ffffff; margin-bottom: 36px; }
+    .loading-steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 40px; }
+    .loading-step {
+      display: flex; align-items: center; gap: 16px; padding: 14px 0;
+      border-bottom: 1px solid var(--border-subtle); opacity: 0.28;
+      transition: opacity 0.4s ease;
+    }
+    .loading-step:last-child { border-bottom: none; }
+    .loading-step.active { opacity: 1; }
+    .loading-step.done   { opacity: 0.55; }
+    .step-indicator {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid var(--border-medium);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .loading-step.active .step-indicator { border-color: var(--red); background: rgba(229,9,20,0.12); }
+    .loading-step.done   .step-indicator { border-color: var(--green); background: rgba(34,197,94,0.12); }
+    .step-num { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-muted); }
+    .loading-step.active .step-num { color: var(--red); }
+    .step-check { display: none; width: 13px; height: 13px; stroke: var(--green); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .loading-step.done .step-num   { display: none; }
+    .loading-step.done .step-check { display: block; }
+    .step-spinner {
+      display: none; width: 14px; height: 14px;
+      border: 1.5px solid rgba(229,9,20,0.25); border-top-color: var(--red);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    .loading-step.active .step-spinner { display: block; }
+    .loading-step.active .step-num    { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .step-text { flex: 1; }
+    .step-label { font-size: 14px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+    .loading-step:not(.active):not(.done) .step-label { color: var(--text-secondary); }
+    .step-sublabel { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; letter-spacing: 0; }
+    .loading-step.active .step-sublabel { color: var(--text-secondary); }
+    .progress-track { width: 100%; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 2px; background: linear-gradient(90deg, var(--red), #ff4d4d); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .progress-pct { margin-top: 10px; font-size: 11px; letter-spacing: 0.06em; color: var(--text-muted); text-align: right; }
+    html[dir="rtl"] .progress-pct { text-align: left; }
+
+    /* ══ VIEW 3 — RESULTS ════════════════════════════════════════════ */
+    #viewResults { align-items: flex-start; justify-content: flex-start; padding-top: calc(var(--header-h) + 40px); }
+    .results-wrap { width: 100%; max-width: 780px; }
+    .result-meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+    .result-analyzed-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .ai-gen-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px;
+      border-radius: var(--radius-pill); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid;
+    }
+    .ai-gen-badge.is-ai  { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.35); color: #a78bfa; }
+    .ai-gen-badge.not-ai { background: rgba(255,255,255,0.05); border-color: var(--border-medium); color: var(--text-secondary); }
+    .ai-gen-badge svg { width: 11px; height: 11px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .result-claim-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .result-claim { font-family: var(--font-headline); font-weight: 700; font-size: clamp(1.5rem, 3.5vw, 2.1rem); letter-spacing: -0.02em; line-height: 1.15; color: #ffffff; margin-bottom: 32px; }
+    .result-cols { display: grid; grid-template-columns: 1fr 220px; gap: 28px; align-items: start; }
+    .verdict-card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 24px 26px; }
+    .verdict-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .verdict-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); }
+    .grade-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: var(--radius-pill); font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid; }
+    .grade-badge.honest  { background: var(--green-bg);  border-color: var(--green-border);  color: var(--green);  }
+    .grade-badge.neutral { background: var(--orange-bg); border-color: var(--orange-border); color: var(--orange); }
+    .grade-badge.danger  { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+    .verdict-bullets { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .verdict-bullet { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 400; line-height: 1.55; color: #d4d4d4; letter-spacing: -0.01em; }
+    .bullet-icon { flex-shrink: 0; margin-top: 2px; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .bullet-icon.ok   { background: var(--green-bg);  }
+    .bullet-icon.warn { background: var(--orange-bg); }
+    .bullet-icon.bad  { background: var(--danger-bg); }
+    .bullet-icon svg  { width: 10px; height: 10px; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .bullet-icon.ok   svg { stroke: var(--green);  }
+    .bullet-icon.warn svg { stroke: var(--orange); }
+    .bullet-icon.bad  svg { stroke: var(--danger); }
+    .score-card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .score-card-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; align-self: flex-start; }
+    .gauge-svg { width: 160px; height: 100px; overflow: visible; }
+    .gauge-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; stroke-linecap: round; }
+    .gauge-fill  { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 220; stroke-dashoffset: 220; transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.4s ease; }
+    .gauge-score { font-family: var(--font-headline); font-weight: 800; font-size: 2.4rem; letter-spacing: -0.03em; text-anchor: middle; dominant-baseline: central; }
+    .score-grade-badge { margin-top: 14px; }
+    .score-sublabel { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; letter-spacing: 0; }
+    .result-detail-strip { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; margin-top: 20px; background: var(--border-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); overflow: hidden; }
+    .detail-cell { background: var(--bg-card); padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; }
+    .detail-cell-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .detail-cell-value { font-size: 14px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+    .retry-row { margin-top: 28px; display: flex; gap: 12px; align-items: center; }
+    .retry-btn {
+      display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px;
+      border-radius: var(--radius-pill); border: 1px solid var(--border-medium); background: transparent;
+      color: var(--text-secondary); font-family: var(--font-ui); font-size: 13px; font-weight: 400; letter-spacing: -0.01em;
+      cursor: pointer; transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .retry-btn:hover { border-color: var(--border-strong); color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .retry-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    html[dir="rtl"] .retry-btn svg { transform: scaleX(-1); }
+
+    /* ══ DEEP DIVE ════════════════════════════════════════════════════ */
+    .deep-dive-section { margin-top: 32px; width: 100%; }
+    .deep-dive-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 22px; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-card); background: var(--bg-card);
+      cursor: pointer; transition: border-color var(--transition), background var(--transition);
+      text-align: left;
+    }
+    html[dir="rtl"] .deep-dive-trigger { text-align: right; }
+    .deep-dive-trigger:hover { border-color: var(--border-medium); background: rgba(255,255,255,0.03); }
+    .deep-dive-trigger-left { display: flex; align-items: center; gap: 12px; }
+    .deep-dive-trigger-icon {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .deep-dive-trigger-icon svg { width: 14px; height: 14px; stroke: var(--text-secondary); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .deep-dive-trigger-title { font-size: 13.5px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+    .deep-dive-trigger-sub   { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; letter-spacing: 0; }
+    .deep-dive-chevron {
+      width: 20px; height: 20px; flex-shrink: 0;
+      stroke: var(--text-muted); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .deep-dive-trigger.open .deep-dive-chevron { transform: rotate(180deg); }
+    .deep-dive-trigger.open { border-color: var(--border-medium); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .deep-dive-body {
+      overflow: hidden; max-height: 0;
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, padding 0.35s ease;
+      opacity: 0;
+      border: 1px solid var(--border-medium); border-top: none;
+      border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg);
+      background: var(--bg-deep);
+    }
+    .deep-dive-body.open { max-height: 3000px; opacity: 1; }
+    .deep-dive-inner { padding: 28px 24px 32px; display: flex; flex-direction: column; gap: 32px; }
+    .dd-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: -1px; }
+    .dd-tab {
+      display: flex; align-items: center; gap: 7px; padding: 10px 18px 11px; border: none; background: transparent;
+      font-family: var(--font-ui); font-size: 12.5px; font-weight: 500; letter-spacing: 0.02em;
+      color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .dd-tab:hover { color: var(--text-secondary); }
+    .dd-tab.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+    .dd-tab-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.5; flex-shrink: 0; }
+    .dd-panel { display: none; }
+    .dd-panel.active { display: block; }
+    .dd-summary-intro { font-size: 13px; color: var(--text-muted); letter-spacing: 0; margin-bottom: 20px; font-style: italic; }
+    .dd-summary-blocks { display: flex; flex-direction: column; gap: 0; }
+    .dd-summary-block { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border-subtle); }
+    .dd-summary-block:last-child { border-bottom: none; padding-bottom: 0; }
+    .dd-block-num { font-family: var(--font-headline); font-weight: 700; font-size: 1.6rem; line-height: 1; letter-spacing: -0.03em; color: var(--border-medium); flex-shrink: 0; width: 36px; padding-top: 2px; }
+    .dd-block-content { flex: 1; }
+    .dd-block-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .dd-block-text { font-size: 15px; font-weight: 400; line-height: 1.7; color: #cccccc; letter-spacing: -0.01em; }
+    .dd-script-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .dd-script-meta-pill {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--text-muted);
+    }
+    .dd-script-box {
+      background: #0c0c0c; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+      padding: 20px 22px; max-height: 360px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent;
+    }
+    .dd-script-box::-webkit-scrollbar { width: 4px; }
+    .dd-script-box::-webkit-scrollbar-track { background: transparent; }
+    .dd-script-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+    .dd-script-line { display: flex; gap: 16px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .dd-script-line:last-child { border-bottom: none; }
+    .dd-script-ts { font-family: 'Courier New', monospace; font-size: 11px; font-weight: 400; color: var(--text-muted); flex-shrink: 0; width: 42px; padding-top: 1px; letter-spacing: 0; }
+    .dd-script-text { font-size: 13.5px; font-weight: 400; line-height: 1.6; color: #b0b0b0; letter-spacing: -0.01em; }
+    .dd-script-text.flagged { color: #ff8585; background: rgba(229,9,20,0.08); border-radius: 3px; padding: 0 4px; }
+    .dd-comments-list { display: flex; flex-direction: column; gap: 1px; }
+    .dd-comment { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 18px 20px; transition: border-color var(--transition); }
+    .dd-comment:hover { border-color: var(--border-medium); }
+    .dd-comment-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .dd-comment-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; letter-spacing: 0; }
+    .dd-comment-meta { flex: 1; }
+    .dd-comment-name { font-size: 13px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .dd-comment-info { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; letter-spacing: 0; }
+    .dd-comment-tag { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid; }
+    .dd-comment-tag.summary  { background: rgba(59,130,246,0.10); border-color: rgba(59,130,246,0.30); color: #60a5fa; }
+    .dd-comment-tag.factcheck{ background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+    .dd-comment-tag.rebuttal { background: var(--orange-bg); border-color: var(--orange-border); color: var(--orange); }
+    .dd-comment-text { font-size: 14px; font-weight: 400; line-height: 1.65; color: #c8c8c8; letter-spacing: -0.01em; }
+    .dd-comment-footer { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+    .dd-likes { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+    .dd-likes svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+
+    /* ══ RECOMMENDATIONS ══════════════════════════════════════════════ */
+    .rec-section { margin-top: 36px; width: 100%; animation: fadeUp 0.45s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .rec-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .rec-header-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--danger-bg); border: 1px solid var(--danger-border); }
+    .rec-header-icon svg { width: 14px; height: 14px; stroke: var(--danger); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .rec-header-text { flex: 1; min-width: 200px; }
+    .rec-header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 2px; }
+    .rec-header-sub { font-size: 12px; color: var(--text-muted); letter-spacing: 0; }
+    .rec-reason-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--danger-border); background: var(--danger-bg); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--danger); }
+    .rec-reason-pill svg { width: 10px; height: 10px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .rec-divider { width: 100%; height: 1px; background: var(--border-subtle); margin-bottom: 20px; }
+    .rec-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .rec-card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition); text-decoration: none; display: flex; flex-direction: column; }
+    .rec-card:hover { border-color: var(--border-medium); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,0.4); }
+    .rec-thumb { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #0c0c0c; }
+    .rec-thumb-bg { position: absolute; inset: 0; opacity: 0.65; }
+    .rec-thumb-pattern { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 20px 20px; }
+    .rec-thumb-gradient { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .rec-thumb-initial { position: relative; z-index: 2; font-family: var(--font-headline); font-weight: 800; font-size: 2.8rem; letter-spacing: -0.04em; color: rgba(255,255,255,0.15); text-transform: uppercase; user-select: none; }
+    .rec-duration { position: absolute; bottom: 8px; right: 8px; z-index: 3; padding: 2px 7px; border-radius: 4px; background: rgba(0,0,0,0.82); font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700; color: #ffffff; letter-spacing: 0.04em; }
+    html[dir="rtl"] .rec-duration { right: auto; left: 8px; }
+    .rec-verified-badge { position: absolute; top: 10px; left: 10px; z-index: 3; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--radius-pill); background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.4); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+    html[dir="rtl"] .rec-verified-badge { left: auto; right: 10px; }
+    .rec-verified-badge svg { width: 9px; height: 9px; stroke: currentColor; stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .rec-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .rec-channel-row { display: flex; align-items: center; gap: 8px; }
+    .rec-channel-avatar { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+    .rec-channel-name { font-size: 11.5px; font-weight: 500; color: var(--text-muted); letter-spacing: -0.01em; }
+    .rec-channel-check { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); display: flex; align-items: center; justify-content: center; }
+    .rec-channel-check svg { width: 7px; height: 7px; stroke: #60a5fa; stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .rec-title { font-family: var(--font-headline); font-weight: 600; font-size: 14.5px; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .rec-why { font-size: 12px; color: var(--text-muted); line-height: 1.5; letter-spacing: -0.01em; padding: 8px 11px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); }
+    .rec-why strong { color: var(--text-secondary); font-weight: 500; }
+    .rec-meta-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+    .rec-meta-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-muted); }
+    .rec-meta-item svg { width: 11px; height: 11px; stroke: currentColor; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .rec-score-pill { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--green-bg); border: 1px solid var(--green-border); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--green); }
+    .rec-cta { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; margin: 0 18px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: transparent; color: var(--text-secondary); font-family: var(--font-ui); font-size: 12.5px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; cursor: pointer; transition: border-color var(--transition), color var(--transition), background var(--transition); }
+    .rec-cta:hover { border-color: var(--border-strong); color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .rec-cta svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ══ FOOTER ══════════════════════════════════════════════════════ */
+    footer { position: relative; z-index: 1; padding: 24px 32px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-copy { font-family: var(--font-ui); font-size: 12px; font-weight: 400; letter-spacing: -0.01em; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-family: var(--font-ui); font-size: 12px; font-weight: 400; letter-spacing: -0.01em; color: var(--text-muted); text-decoration: none; transition: color var(--transition); }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ══ RESPONSIVE ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .view { padding: calc(var(--header-h) + 36px) 24px 60px; }
+      .hero-headline { font-size: clamp(3rem, 13vw, 5rem); }
+      .stats-strip, .result-detail-strip { max-width: 100%; }
+      .stat-value { font-size: 1.8rem; }
+      .result-cols { grid-template-columns: 1fr; }
+      .score-card { flex-direction: row; align-items: center; padding: 20px 22px; }
+      .score-card-label { margin-bottom: 0; }
+    }
+    @media (max-width: 480px) {
+      header { padding: 0 18px; }
+      .logo-wordmark { font-size: 14.5px; }
+      .header-right { gap: 8px; }
+      .beta-badge { display: none; }
+      .view { padding: calc(var(--header-h) + 28px) 18px 50px; }
+      .hero-headline { font-size: clamp(2.6rem, 15vw, 4rem); }
+      .stats-strip { grid-template-columns: 1fr; }
+      .stat-card { padding: 18px 20px 16px; }
+      .url-input { height: 64px; font-size: 14.5px; border-radius: var(--radius-lg); }
+      .input-wrap::before { border-radius: calc(var(--radius-lg) + 1.5px); }
+      .input-wrap::after  { border-radius: calc(var(--radius-lg) + 6px); }
+      .verify-btn { height: 58px; font-size: 14px; border-radius: var(--radius-lg); }
+      .lang-dropdown { right: -8px; min-width: 200px; }
+      .result-detail-strip { grid-template-columns: 1fr; }
+      .dd-tabs { overflow-x: auto; }
+      footer { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+  </style>
+</head>
+<body>
+
+  <!-- i18n Loading Overlay -->
+  <div id="i18nOverlay" role="status" aria-label="Loading translations">
+    <div class="i18n-spinner"></div>
+  </div>
+
+  <!-- ════════ HEADER ════════ -->
+  <header role="banner">
+    <a href="/" class="logo" aria-label="TruthTube home" onclick="goHome(event)">
+      <div class="logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 10,6 0,12"/></svg>
+      </div>
+      <span class="logo-wordmark"><span class="logo-truth">Truth</span><span class="logo-tube">Tube</span></span>
+    </a>
+    <div class="header-right">
+      <button class="back-btn" id="backBtn" onclick="goHome()" aria-label="Back to home">
+        <svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg>
+        <span data-i18n="header.back">Back</span>
+      </button>
+      <span class="beta-badge" data-i18n="header.beta">Beta</span>
+      <div class="lang-wrapper" id="langWrapper">
+        <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Select language" onclick="toggleLang()">
+          <span class="lang-flag" id="currentFlag" aria-hidden="true">🇺🇸</span>
+          <span id="currentLang">English</span>
+          <svg class="lang-caret" id="langCaret" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <polyline points="3,5 7,9 11,5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="lang-dropdown" id="langDropdown" role="listbox" aria-label="Language options"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════ VIEW 1: HOME ════════ -->
+  <main id="viewHome" class="view" role="main">
+    <section class="hero" aria-labelledby="heroHeadline">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        <span data-i18n="hero.eyebrow">AI-Powered Thumbnail Fact-Checker</span>
+      </div>
+      <h1 class="hero-headline" id="heroHeadline">
+        <span class="line-thin" data-i18n="hero.line1">Did you get</span>
+        <span class="line-heavy" data-i18n="hero.line2">Clickbaited?</span>
+      </h1>
+    </section>
+    <div class="stats-strip" role="list" aria-label="Key statistics">
+      <div class="stat-card" role="listitem">
+        <span class="stat-value" data-i18n="stats.clickbaitRate.value">68%</span>
+        <span class="stat-label" data-i18n="stats.clickbaitRate.label">Avg. Clickbait Rate</span>
+      </div>
+      <div class="stat-card" role="listitem">
+        <span class="stat-value" data-i18n="stats.analysisSpeed.value">5s</span>
+        <span class="stat-label" data-i18n="stats.analysisSpeed.label">Analysis Speed</span>
+      </div>
+      <div class="stat-card" role="listitem">
+        <span class="stat-value" data-i18n="stats.deepAnalysis.value">3</span>
+        <span class="stat-label" data-i18n="stats.deepAnalysis.label">Deep Analysis</span>
+      </div>
+    </div>
+    <section class="search-section" aria-label="URL verification">
+      <div class="input-wrap">
+        <label for="urlInput" class="sr-only">YouTube URL</label>
+        <input type="url" id="urlInput" class="url-input"
+          data-i18n-placeholder="search.placeholder"
+          placeholder="Paste a YouTube URL here…"
+          aria-label="YouTube URL" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <button class="clear-btn" id="clearBtn" type="button" aria-label="Clear input" onclick="clearInput()">
+          <svg viewBox="0 0 14 14" aria-hidden="true"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+        </button>
+      </div>
+      <button class="verify-btn" id="verifyBtn" type="button" aria-label="Verify this video" onclick="handleVerify()">
+        <span class="verify-icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9"/><path d="M7.5 11.5 l2.5 2.5 l5 -5"/></svg>
+        </span>
+        <span data-i18n="search.verifyBtn">Verify</span>
+      </button>
+      <div class="try-example-row">
+        <button class="try-example-btn" onclick="tryExample()" aria-label="Try a sample video">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+          <span data-i18n="search.tryExample">Try example</span>
+        </button>
+        <span class="try-hint" data-i18n="search.tryHint">No real URL needed — see how it works</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- ════════ VIEW 2: LOADING ════════ -->
+  <div id="viewLoading" class="view" role="status" aria-live="polite" aria-label="Analysis in progress">
+    <div class="loading-wrap">
+      <p class="loading-url-label" data-i18n="loading.analyzing">Analyzing</p>
+      <p class="loading-url-display" id="loadingUrlDisplay">—</p>
+      <h2 class="loading-title" data-i18n="loading.title">Analyzing…</h2>
+      <div class="loading-steps" id="loadingSteps">
+        <div class="loading-step" id="step1">
+          <div class="step-indicator">
+            <span class="step-num">01</span>
+            <svg class="step-check" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2"/></svg>
+            <div class="step-spinner"></div>
+          </div>
+          <div class="step-text">
+            <div class="step-label" data-i18n="loading.step1.label">Collecting subtitles</div>
+            <div class="step-sublabel" data-i18n="loading.step1.sub">Extracting transcript from video</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step2">
+          <div class="step-indicator">
+            <span class="step-num">02</span>
+            <svg class="step-check" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2"/></svg>
+            <div class="step-spinner"></div>
+          </div>
+          <div class="step-text">
+            <div class="step-label" data-i18n="loading.step2.label">AI language model analysis</div>
+            <div class="step-sublabel" data-i18n="loading.step2.sub">Comparing thumbnail claim vs. content</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step3">
+          <div class="step-indicator">
+            <span class="step-num">03</span>
+            <svg class="step-check" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,2"/></svg>
+            <div class="step-spinner"></div>
+          </div>
+          <div class="step-text">
+            <div class="step-label" data-i18n="loading.step3.label">Trust scoring</div>
+            <div class="step-sublabel" data-i18n="loading.step3.sub">Calculating credibility index</div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-pct" id="progressPct">0%</div>
+    </div>
+  </div>
+
+  <!-- ════════ VIEW 3: RESULTS ════════ -->
+  <div id="viewResults" class="view" role="main" aria-label="Analysis results">
+    <div class="results-wrap">
+      <div class="result-meta-row">
+        <span class="result-analyzed-label" data-i18n="results.analysisComplete">Analysis Complete</span>
+        <div class="ai-gen-badge" id="aiGenBadge">
+          <svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M5 7 l1.5 1.5 l3 -3"/></svg>
+          <span id="aiGenText">—</span>
+        </div>
+      </div>
+      <p class="result-claim-label" data-i18n="results.thumbnailClaim">Thumbnail claim</p>
+      <h2 class="result-claim" id="resultClaim">—</h2>
+      <div class="result-cols">
+        <div class="verdict-card">
+          <div class="verdict-header">
+            <span class="verdict-label" data-i18n="results.verdict">Verdict</span>
+            <span class="grade-badge" id="gradeBadge">—</span>
+          </div>
+          <ul class="verdict-bullets" id="verdictBullets" aria-label="Analysis findings"></ul>
+        </div>
+        <div class="score-card">
+          <span class="score-card-label" data-i18n="results.factScore">Fact Score</span>
+          <svg class="gauge-svg" viewBox="0 0 160 100" aria-label="Fact score gauge" role="img">
+            <path class="gauge-track" d="M 20 90 A 60 60 0 0 1 140 90"/>
+            <path class="gauge-fill" id="gaugeFill" d="M 20 90 A 60 60 0 0 1 140 90"/>
+            <text class="gauge-score" x="80" y="75" fill="white" id="gaugeScoreText">—</text>
+          </svg>
+          <div class="grade-badge score-grade-badge" id="scoreGradeBadge">—</div>
+          <p class="score-sublabel" data-i18n="results.credibilityIndex" id="scoreSubLabel">Credibility Index</p>
+        </div>
+      </div>
+      <div class="result-detail-strip" id="detailStrip">
+        <div class="detail-cell">
+          <span class="detail-cell-label" data-i18n="results.duration">Duration</span>
+          <span class="detail-cell-value" id="detailDuration">—</span>
+        </div>
+        <div class="detail-cell">
+          <span class="detail-cell-label" data-i18n="results.contentMatch">Content Match</span>
+          <span class="detail-cell-value" id="detailMatch">—</span>
+        </div>
+        <div class="detail-cell">
+          <span class="detail-cell-label" data-i18n="results.aggroIndex">Aggro Index</span>
+          <span class="detail-cell-value" id="detailAggro">—</span>
+        </div>
+      </div>
+
+      <!-- Deep Dive -->
+      <div class="deep-dive-section">
+        <button class="deep-dive-trigger" id="deepDiveTrigger" onclick="toggleDeepDive()" aria-expanded="false" aria-controls="deepDiveBody">
+          <div class="deep-dive-trigger-left">
+            <div class="deep-dive-trigger-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.8" fill="currentColor" stroke="none"/></svg>
+            </div>
+            <div>
+              <div class="deep-dive-trigger-title" data-i18n="deepDive.triggerTitle">Deep Dive Analysis</div>
+              <div class="deep-dive-trigger-sub"   data-i18n="deepDive.triggerSub">Story breakdown · Full transcript · Top comments</div>
+            </div>
+          </div>
+          <svg class="deep-dive-chevron" viewBox="0 0 16 16" aria-hidden="true"><polyline points="4,6 8,10 12,6"/></svg>
+        </button>
+        <div class="deep-dive-body" id="deepDiveBody" role="region" aria-label="Deep dive analysis">
+          <div class="deep-dive-inner">
+            <div>
+              <nav class="dd-tabs" role="tablist" aria-label="Deep dive sections">
+                <button class="dd-tab active" role="tab" aria-selected="true" aria-controls="panelSummary" id="tabSummary" onclick="switchTab('Summary')">
+                  <span class="dd-tab-dot" aria-hidden="true"></span>
+                  <span data-i18n="deepDive.tabSummary">Story Summary</span>
+                </button>
+                <button class="dd-tab" role="tab" aria-selected="false" aria-controls="panelScript" id="tabScript" onclick="switchTab('Script')">
+                  <span class="dd-tab-dot" aria-hidden="true"></span>
+                  <span data-i18n="deepDive.tabScript">Full Script</span>
+                </button>
+                <button class="dd-tab" role="tab" aria-selected="false" aria-controls="panelComments" id="tabComments" onclick="switchTab('Comments')">
+                  <span class="dd-tab-dot" aria-hidden="true"></span>
+                  <span data-i18n="deepDive.tabComments">Top Comments</span>
+                </button>
+              </nav>
+            </div>
+            <div class="dd-panel active" id="panelSummary" role="tabpanel" aria-labelledby="tabSummary">
+              <p class="dd-summary-intro" data-i18n="deepDive.summaryIntro">Written in plain language — easy for anyone to understand.</p>
+              <div class="dd-summary-blocks" id="summaryBlocks"></div>
+            </div>
+            <div class="dd-panel" id="panelScript" role="tabpanel" aria-labelledby="tabScript">
+              <div class="dd-script-meta">
+                <span class="dd-script-meta-pill">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="1" y="3" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M4 3V2a2 2 0 014 0v1" stroke="currentColor" stroke-width="1.4"/></svg>
+                  <span data-i18n="deepDive.transcriptLabel">AI-extracted transcript</span>
+                </span>
+                <span class="dd-script-meta-pill" data-i18n="deepDive.flaggedLabel">Red = flagged claim</span>
+              </div>
+              <div class="dd-script-box" id="scriptBox" aria-label="Full video transcript"></div>
+            </div>
+            <div class="dd-panel" id="panelComments" role="tabpanel" aria-labelledby="tabComments">
+              <div class="dd-comments-list" id="commentsList" aria-label="Curated top comments"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="rec-section" id="recSection" style="display:none;" aria-label="Recommended alternative videos">
+        <div class="rec-header">
+          <div class="rec-header-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M8 2 L8 9"/><path d="M5 6 L8 9 L11 6"/><rect x="2" y="11" width="12" height="3" rx="1"/></svg>
+          </div>
+          <div class="rec-header-text">
+            <div class="rec-header-title" data-i18n="deepDive.watchInstead">Watch this instead</div>
+            <div class="rec-header-sub" id="recHeaderSub">Higher-quality videos on the same topic</div>
+          </div>
+          <div class="rec-reason-pill" id="recReasonPill">
+            <svg viewBox="0 0 12 12"><path d="M6 1 L6 7"/><circle cx="6" cy="10" r="0.8" fill="currentColor" stroke="none"/></svg>
+            <span id="recReasonText">Low trust score</span>
+          </div>
+        </div>
+        <div class="rec-divider" aria-hidden="true"></div>
+        <div class="rec-grid" id="recGrid" role="list" aria-label="Recommended videos"></div>
+      </div>
+
+      <div class="retry-row">
+        <button class="retry-btn" onclick="goHome()" aria-label="Check another video">
+          <svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg>
+          <span data-i18n="results.checkAnother">Check another</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer role="contentinfo">
+    <p class="footer-copy" data-i18n="footer.copy">© 2025 TruthTube. All rights reserved.</p>
+    <nav class="footer-links" aria-label="Footer links">
+      <a href="#" data-i18n="footer.privacy">Privacy</a>
+      <a href="#" data-i18n="footer.terms">Terms</a>
+      <a href="#" data-i18n="footer.about">About</a>
+      <a href="#" data-i18n="footer.contact">Contact</a>
+    </nav>
+  </footer>
+
+  <!-- ════════ SCRIPTS ════════ -->
+  <script>
+    /* ── SR-only utility ── */
+    const srStyle = document.createElement('style');
+    srStyle.textContent = `.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}`;
+    document.head.appendChild(srStyle);
+
+    /* ══════════════════════════════════════════════════════════════
+       MOCK DATA — All language-independent (translated at render time)
+    ══════════════════════════════════════════════════════════════ */
+    const ALT_VIDEOS = {
+      health: [
+        { title: 'What Actually Happens When Cancer Research Gets Hyped', channel: 'Kurzgesagt – In a Nutshell', chInit: 'KZ', chColor: '#3b82f6', views: '8.4M views', date: '2 years ago', duration: '14:22', score: 96, why: '<strong>Why we recommend this:</strong> Walks through how lab results become headlines. Cites primary sources throughout.', url: 'https://www.youtube.com/c/inanutshell', gradient: 'linear-gradient(135deg,#1e3a5f,#0f2040)', initial: 'K' },
+        { title: 'How to Read a Medical Study (Without Being Fooled)', channel: 'Medlife Crisis', chInit: 'MC', chColor: '#22c55e', views: '2.1M views', date: '1 year ago', duration: '18:07', score: 94, why: '<strong>Why we recommend this:</strong> A cardiologist explains how to distinguish preliminary findings from proven treatments.', url: 'https://www.youtube.com/@medlifecrisis', gradient: 'linear-gradient(135deg,#1a3d2b,#0d2218)', initial: 'M' },
+      ],
+      career: [
+        { title: 'The Real Math Behind Quitting Your Job — A Financial Framework', channel: 'Ben Felix', chInit: 'BF', chColor: '#f97316', views: '1.3M views', date: '8 months ago', duration: '22:45', score: 93, why: '<strong>Why we recommend this:</strong> Evidence-based financial analysis. Covers savings rates and income replacement ratios.', url: 'https://www.youtube.com/@BenFelixCSI', gradient: 'linear-gradient(135deg,#3d2200,#1f1100)', initial: 'B' },
+        { title: 'I Left Big Tech — Here\'s What the Numbers Actually Looked Like', channel: 'Lenny\'s Podcast', chInit: 'LP', chColor: '#a78bfa', views: '890K views', date: '5 months ago', duration: '41:18', score: 88, why: '<strong>Why we recommend this:</strong> Documents the full financial picture of leaving a high-earning role.', url: 'https://www.youtube.com/@LennysPodcast', gradient: 'linear-gradient(135deg,#2d1a5c,#180e30)', initial: 'L' },
+      ],
+      tech: [
+        { title: 'I Tested Every iPhone 17 Pro Feature Apple Actually Announced', channel: 'Marques Brownlee', chInit: 'MB', chColor: '#3b82f6', views: '11.2M views', date: '3 months ago', duration: '16:44', score: 97, why: '<strong>Why we recommend this:</strong> Hands-on review of every publicly announced feature. Nothing speculative.', url: 'https://www.youtube.com/@mkbhd', gradient: 'linear-gradient(135deg,#0f2040,#060f20)', initial: 'M' },
+        { title: 'Apple iPhone 17 Pro — The Actual Hidden Features (vs. What YouTube Claims)', channel: 'AppleInsider', chInit: 'AI', chColor: '#60a5fa', views: '620K views', date: '2 months ago', duration: '09:33', score: 91, why: '<strong>Why we recommend this:</strong> Specifically debunks viral hidden-feature videos with Apple developer documentation.', url: 'https://www.youtube.com/@AppleInsider', gradient: 'linear-gradient(135deg,#1a2e4a,#0d1825)', initial: 'A' },
+      ],
+      fitness: [
+        { title: 'The Science of Realistic Weight Loss — What 6 Months of Data Shows', channel: 'Jeff Nippard', chInit: 'JN', chColor: '#22c55e', views: '4.7M views', date: '1 year ago', duration: '19:12', score: 95, why: '<strong>Why we recommend this:</strong> Evidence-based analysis citing peer-reviewed studies.', url: 'https://www.youtube.com/@JeffNippard', gradient: 'linear-gradient(135deg,#0d3020,#061810)', initial: 'J' },
+        { title: 'A Dietitian Rates 10 Popular 30-Day Transformation Routines', channel: 'Abbey Sharp', chInit: 'AS', chColor: '#f97316', views: '1.8M views', date: '7 months ago', duration: '24:55', score: 90, why: '<strong>Why we recommend this:</strong> Registered dietitian independently evaluates the calorie math and sustainability.', url: 'https://www.youtube.com/@AbbeySharp', gradient: 'linear-gradient(135deg,#3d1a00,#1f0d00)', initial: 'A' },
+      ],
+    };
+
+    const MOCK_RESULTS = [
+      {
+        claim: '"Scientists CONFIRM: Eating This ONE Food Cures Cancer 100%"',
+        score: 8, grade: 'danger', isAI: true, topic: 'health', recCount: 2,
+        bullets: [
+          { type: 'bad',  text: 'No peer-reviewed study supports a single food as a cancer cure. The claim directly contradicts established oncology consensus.' },
+          { type: 'bad',  text: 'The video\'s content discusses a preliminary lab study on mice — vastly extrapolated into a human cure narrative.' },
+          { type: 'warn', text: 'Emotionally loaded language ("100%", "CONFIRM") is a classic clickbait pattern designed to bypass critical thinking.' },
+          { type: 'ok',   text: 'The video does acknowledge in minute 18 that results are early-stage — but this caveat is buried under 17 minutes of hype.' },
+        ],
+        duration: '21:44', match: '12% overlap', aggro: 'Very High',
+        summary: [
+          { title: 'What the video starts with', text: 'The video opens with dramatic music and a claim that a certain berry has been "confirmed" by scientists to destroy cancer cells, using real-looking graphics to appear credible.' },
+          { title: 'What it actually says', text: 'After the flashy intro, the video discusses a real study — but it was done on cancer cells in a petri dish, not in humans. The study never used the word "cure."' },
+          { title: 'The hidden admission', text: 'At the 18-minute mark, a single sentence mentions the results are "preliminary and require further study." Easy to miss after 20 minutes of cure-language.' },
+          { title: 'The bottom line', text: 'This video takes a tiny, early-stage lab result and presents it as a proven cancer cure. The thumbnail claim is false and could cause real harm.' },
+        ],
+        script: [
+          { ts: '0:00', text: 'What if I told you that scientists have finally confirmed it.', flagged: true },
+          { ts: '0:08', text: 'A single food shown in laboratory studies to destroy cancer cells with 100% effectiveness.', flagged: true },
+          { ts: '0:17', text: 'And the big pharmaceutical companies don\'t want you to know about it.', flagged: true },
+          { ts: '0:34', text: 'Researchers at a university published a paper looking at a compound found in the blushwood berry.', flagged: false },
+          { ts: '0:44', text: 'In their lab tests, this compound was able to eliminate tumor cells in a petri dish environment.', flagged: false },
+          { ts: '1:04', text: 'Now, what does this mean for you and me? It means a cure could be right around the corner.', flagged: true },
+          { ts: '1:14', text: 'Of course, more research is needed and human trials have not yet begun.', flagged: false },
+          { ts: '18:02', text: 'It\'s worth noting that these results are preliminary and require further study before any clinical applications.', flagged: false },
+        ],
+        comments: [
+          { name: 'HealthSkeptic99', initials: 'HS', color: '#3b82f6', tag: 'factcheck', tagLabel: 'Fact Check', likes: '4.2K', text: 'As a biology PhD student: petri dish studies are Step 1 of maybe 10,000 steps before something becomes a treatment. The study is real but this presentation is deeply misleading.' },
+          { name: 'CancerSurvivor_Mike', initials: 'CM', color: '#22c55e', tag: 'rebuttal', tagLabel: 'Rebuttal', likes: '2.8K', text: 'My oncologist specifically warned me about videos like this. False hope is dangerous when it stops people from pursuing real treatment.' },
+          { name: 'VideoSummaryBot', initials: 'VS', color: '#888', tag: 'summary', tagLabel: 'Summary', likes: '1.1K', text: 'Summary: Discusses the blushwood berry compound EBC-46. Real study, real results IN MICE. No human trials completed. The "100% cure" framing does not reflect the study\'s conclusions.' },
+        ],
+      },
+      {
+        claim: '"I Quit My $300K Job — Here\'s Why You Should Too"',
+        score: 41, grade: 'neutral', isAI: false, topic: 'career', recCount: 1,
+        bullets: [
+          { type: 'warn', text: 'The title frames a personal decision as universal advice, which the content does not actually support.' },
+          { type: 'ok',   text: 'The video\'s main content does document the creator\'s real career transition with verifiable context.' },
+          { type: 'warn', text: 'The $300K salary figure is mentioned once in passing — not a central theme as the thumbnail implies.' },
+          { type: 'ok',   text: 'No outright fabrications detected. Overstatement rather than misinformation is the primary concern.' },
+        ],
+        duration: '14:22', match: '58% overlap', aggro: 'Medium',
+        summary: [
+          { title: 'What the video is really about', text: 'A personal story about a software engineer who left a high-paying corporate job to pursue independent consulting and eventually a startup.' },
+          { title: 'The $300K claim', text: 'The salary is mentioned briefly as context for the sacrifice. The thumbnail makes it seem more central than it is.' },
+          { title: 'The "you should too" problem', text: 'The creator had a spouse with income, no dependents, and significant savings. These conditions are never stated upfront.' },
+          { title: 'Overall fairness', text: 'This is a moderately honest video. The thumbnail slightly overpromises — it\'s more personal narrative than universal advice.' },
+        ],
+        script: [
+          { ts: '0:00', text: 'Three years ago I walked into my manager\'s office and handed in my resignation.', flagged: false },
+          { ts: '0:09', text: 'I was making $300,000 a year. Benefits. Equity. The whole package.', flagged: false },
+          { ts: '0:17', text: 'And I gave it all up. Here\'s why — and why you might want to consider doing the same.', flagged: true },
+          { ts: '0:36', text: 'I had been freelancing on weekends for about two years before I quit. My side income hit $8K a month.', flagged: false },
+          { ts: '0:56', text: 'My wife was also working, which helped with the transition period.', flagged: false },
+          { ts: '1:06', text: 'I\'m not saying everyone should do this. I\'m saying the framework I used might help you think about it.', flagged: false },
+        ],
+        comments: [
+          { name: 'RealTalkFinance', initials: 'RF', color: '#f97316', tag: 'rebuttal', tagLabel: 'Rebuttal', likes: '3.1K', text: 'Did anyone else catch that he mentions his wife was working AND he had 18 months of savings AND his freelance income was already $8K/month? The thumbnail implies this is universally applicable. It is not.' },
+          { name: 'TechCareerCoach', initials: 'TC', color: '#22c55e', tag: 'factcheck', tagLabel: 'Fact Check', likes: '1.9K', text: 'The consulting rates he mentions are plausible for a senior engineer in his niche. The financial trajectory he describes is realistic. The personal story appears genuine.' },
+          { name: 'QuickSummary', initials: 'QS', color: '#888', tag: 'summary', tagLabel: 'Summary', likes: '980', text: 'TLDR: Senior engineer with spousal income + 18 months savings + existing freelance clients quit his $300K job. Story checks out but requires specific conditions most people don\'t have.' },
+        ],
+      },
+      {
+        claim: '"The iPhone 17 Pro Has a HIDDEN Feature Apple Doesn\'t Want You To Know"',
+        score: 19, grade: 'danger', isAI: true, topic: 'tech', recCount: 2,
+        bullets: [
+          { type: 'bad',  text: 'The "hidden feature" described in the thumbnail does not appear anywhere in the video transcript.' },
+          { type: 'bad',  text: 'The video is a repackaged compilation of features already covered in Apple\'s official keynote.' },
+          { type: 'warn', text: '"Doesn\'t want you to know" framing is a manipulative pattern with no factual basis in this context.' },
+          { type: 'bad',  text: 'Subtitle analysis shows AI-generated narration with no original reporting or source attribution.' },
+        ],
+        duration: '09:51', match: '8% overlap', aggro: 'High',
+        summary: [
+          { title: 'What the thumbnail promises', text: 'A secret iPhone feature Apple actively hides — something exclusive that most people would never find on their own.' },
+          { title: 'What you actually get', text: 'A narrated list of six features that Apple announced publicly at its September keynote. Nothing is hidden.' },
+          { title: 'About the narration', text: 'The voiceover has cadence and slight errors typical of AI text-to-speech. No host, no original footage, no citations.' },
+          { title: 'Verdict in plain terms', text: 'A content farm video. Apple\'s press release fed into AI, read aloud, stock footage added, sensational title attached for clicks.' },
+        ],
+        script: [
+          { ts: '0:00', text: 'Apple never tells you everything at the keynote. There are features buried in the iPhone 17 Pro that they quietly slipped in.', flagged: true },
+          { ts: '0:11', text: 'Feature number one: the new Camera Control button now supports third-party apps.', flagged: false },
+          { ts: '0:19', text: 'Apple announced this at the September event and it is documented in their developer release notes.', flagged: false },
+          { ts: '0:29', text: 'Feature number two: ProRes video can now be shot directly to external storage.', flagged: false },
+          { ts: '0:47', text: 'Feature number three: the satellite connectivity now supports two-way messaging.', flagged: false },
+          { ts: '0:57', text: 'Apple published a full support document about this feature the same day.', flagged: false },
+          { ts: '1:08', text: 'These are the things Apple hopes you never discover.', flagged: true },
+        ],
+        comments: [
+          { name: 'iPhoneReviewer_J', initials: 'IJ', color: '#3b82f6', tag: 'factcheck', tagLabel: 'Fact Check', likes: '5.6K', text: 'Every single "hidden" feature in this video was announced publicly by Apple, covered by every major tech outlet, and is in Apple\'s own support documentation. This is straight-up misinformation by title.' },
+          { name: 'AIDetector_Tool', initials: 'AD', color: '#a78bfa', tag: 'rebuttal', tagLabel: 'Rebuttal', likes: '2.2K', text: 'The narration audio scores 94% AI-generated on multiple detection tools. The channel has uploaded 847 videos in 6 months. This is a content farm.' },
+          { name: 'VideoSummaryPro', initials: 'VP', color: '#888', tag: 'summary', tagLabel: 'Summary', likes: '1.4K', text: 'TLDR: Repackaged Apple press release narrated by AI. All 6 features were publicly announced. The "hidden" and "doesn\'t want you to know" claims are completely false.' },
+        ],
+      },
+      {
+        claim: '"How I Lost 10kg in 30 Days With This Simple Morning Routine"',
+        score: 62, grade: 'neutral', isAI: false, topic: 'fitness', recCount: 1,
+        bullets: [
+          { type: 'ok',   text: 'The creator\'s weight-loss claim is plausible and consistent with the timeframe described in the video.' },
+          { type: 'warn', text: '"Simple" is subjective — the routine involves structured diet, 90-minute daily exercise, and cold plunges.' },
+          { type: 'ok',   text: 'Before/after documentation is shown with timestamps, adding credibility to the personal claim.' },
+          { type: 'warn', text: 'Results are not presented as universally reproducible, but the thumbnail implies they are.' },
+        ],
+        duration: '17:08', match: '74% overlap', aggro: 'Low–Medium',
+        summary: [
+          { title: 'What the creator actually did', text: 'A combination of a 1,500-calorie daily diet, 90 minutes of walking and light weights each morning, daily cold showers, and 8 hours of sleep. Starting weight was 88kg.' },
+          { title: 'Is the claim realistic?', text: '10kg in 30 days is aggressive but not impossible, especially in the first month when water weight drops quickly.' },
+          { title: 'What "simple" actually means', text: 'The routine requires waking at 5:30am, 90 minutes of daily movement, meal prepping, and cold exposure daily. Achievable but not simple for most.' },
+          { title: 'Honest assessment', text: 'Mostly a fair personal account. The documentation is genuine. The main issue is framing — "simple" is a mild overpromise, not a lie.' },
+        ],
+        script: [
+          { ts: '0:00', text: 'Thirty days ago I weighed 88 kilograms. Today I\'m going to show you exactly what I did every single morning.', flagged: false },
+          { ts: '0:11', text: 'I want to be upfront: this was not easy. But it was straightforward.', flagged: false },
+          { ts: '0:19', text: 'Every morning at 5:30 I woke up and started with a two-minute cold shower. No exceptions.', flagged: false },
+          { ts: '0:29', text: 'Then 90 minutes of movement — mostly walking with some bodyweight exercises.', flagged: false },
+          { ts: '0:38', text: 'My diet was 1,500 calories. No processed food, no alcohol, no eating after 7pm.', flagged: false },
+          { ts: '0:48', text: 'Here are my week-by-week weigh-ins. Week one: minus 3.2kg. Mostly water weight, I think.', flagged: false },
+          { ts: '1:08', text: 'Could you do this? I think most people could if they set up their environment right.', flagged: true },
+        ],
+        comments: [
+          { name: 'NutritionNerd_K', initials: 'NK', color: '#22c55e', tag: 'factcheck', tagLabel: 'Fact Check', likes: '2.4K', text: 'Registered dietitian here. A 10kg loss in 30 days is plausible — especially the first month when glycogen and water drop fast. His calorie math checks out.' },
+          { name: 'FitnessRealist', initials: 'FR', color: '#f97316', tag: 'rebuttal', tagLabel: 'Rebuttal', likes: '1.7K', text: '"Simple" is the word I take issue with. 5:30am wake-ups, 90 minutes of daily exercise, meal prep, cold showers — that\'s an entire lifestyle overhaul.' },
+          { name: 'QuickSummaryBot', initials: 'QB', color: '#888', tag: 'summary', tagLabel: 'Summary', likes: '890', text: 'TLDR: Creator (88kg) lost 10.2kg in 30 days via 1500 cal + 90min movement + cold showers + 5:30am schedule. Documented with weekly weigh-ins. Genuine but demanding.' },
+        ],
+      },
+      {
+        claim: '"The Most Accurate Budget Review of the Sony WH-1000XM6"',
+        score: 91, grade: 'honest', isAI: false, topic: null, recCount: 0,
+        bullets: [
+          { type: 'ok', text: 'The video delivers exactly what the title promises: a detailed, spec-accurate review with clear price-performance framing.' },
+          { type: 'ok', text: 'All technical claims (ANC performance, codec support, battery life) are consistent with Sony\'s official specifications.' },
+          { type: 'ok', text: 'The reviewer explicitly states affiliate disclosure and limitations, demonstrating above-average transparency.' },
+          { type: 'ok', text: 'No emotional manipulation patterns detected. Language is measured and evidence-based throughout.' },
+        ],
+        duration: '11:35', match: '94% overlap', aggro: 'Very Low',
+        summary: [
+          { title: 'What this review covers', text: 'A detailed breakdown of the Sony WH-1000XM6 headphones. Tests ANC in four environments, measures battery life, compares specs against competitors.' },
+          { title: 'How accurate is it?', text: 'Every spec claim matches Sony\'s official documentation. Battery life figures align with third-party tests from Rtings.com.' },
+          { title: 'Transparency', text: 'Reviewer discloses an affiliate link, notes the review unit was purchased (not sent by Sony), and flags one area where experience differed from Sony\'s marketing.' },
+          { title: 'Final assessment', text: 'A textbook example of an honest tech review. The title matches the content precisely. Viewers get reliable, actionable information.' },
+        ],
+        script: [
+          { ts: '0:00', text: 'Full disclosure before we start: I bought this headphone with my own money, and there\'s an affiliate link in the description.', flagged: false },
+          { ts: '0:21', text: 'ANC performance: I tested this in four environments — coffee shop, subway, open-plan office, and airplane.', flagged: false },
+          { ts: '0:32', text: 'Battery life claim from Sony is 30 hours with ANC on. In my testing I got 28 hours and 40 minutes. Basically matches.', flagged: false },
+          { ts: '0:55', text: 'One place where Sony\'s marketing overpromises: spatial audio adds noticeable latency when watching video.', flagged: false },
+          { ts: '1:06', text: 'vs Bose QC45: better ANC, worse microphone quality, roughly equal comfort over 4-hour sessions.', flagged: false },
+          { ts: '1:16', text: 'Bottom line: at the current price point, it\'s the best ANC headphone under $300. I\'d buy it again.', flagged: false },
+        ],
+        comments: [
+          { name: 'AudioPhileVerified', initials: 'AV', color: '#22c55e', tag: 'factcheck', tagLabel: 'Fact Check', likes: '3.8K', text: 'Cross-referenced his battery numbers with Rtings.com (28:22 measured) and Sony specs. All figures check out. The spatial audio latency issue he flags is real. Solid work.' },
+          { name: 'HeadphoneEnthusiast', initials: 'HE', color: '#3b82f6', tag: 'summary', tagLabel: 'Summary', likes: '2.1K', text: 'TLDR: Reviewer bought unit himself, tested ANC in 4 environments, measured 28:40 battery, confirmed LDAC + multipoint, flagged spatial audio latency. All specs verified. Trustworthy.' },
+          { name: 'BudgetAudioFan', initials: 'BA', color: '#f97316', tag: 'rebuttal', tagLabel: 'Rebuttal', likes: '1.2K', text: 'I\'d push back slightly on the "under $300" framing — street price has been creeping toward $329 lately. Still the best value in its class, but worth checking current pricing.' },
+        ],
+      },
+    ];
+
+    /* ══════════════════════════════════════════════════════════════
+       i18n ENGINE
+       - Loads languages.json via Fetch on init
+       - Falls back gracefully to EN if fetch fails
+       - Applies RTL dir/layout when language.meta.dir === 'rtl'
+    ══════════════════════════════════════════════════════════════ */
+    let i18nData   = {};  /* full JSON: { "en": {...}, "ko": {...}, ... } */
+    let activeLang = 'en';
+    let activeT    = {};  /* shortcut to current language's translation tree */
+
+    /**
+     * Resolve a dot-path key (e.g. "header.back") against activeT.
+     * Returns the value or the key itself as fallback.
+     */
+    function t(key) {
+      const parts = key.split('.');
+      let node = activeT;
+      for (const p of parts) {
+        if (node == null || typeof node !== 'object') return key;
+        node = node[p];
+      }
+      return (node != null && typeof node !== 'object') ? node : key;
+    }
+
+    /**
+     * Walk all [data-i18n] and [data-i18n-placeholder] elements
+     * and update their text/placeholder from the active translation tree.
+     */
+    function applyTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = t(key);
+      });
+    }
+
+    /**
+     * Apply or remove RTL direction on the root <html> element.
+     */
+    function applyDir(dir) {
+      const html = document.documentElement;
+      html.setAttribute('dir', dir || 'ltr');
+      html.setAttribute('lang', activeLang);
+    }
+
+    /**
+     * Switch to a language code.
+     * Returns false if the code is not in i18nData.
+     */
+    function setLanguage(code) {
+      const norm = code.toLowerCase();
+      if (!i18nData[norm]) return false;
+      activeLang = norm;
+      activeT    = i18nData[norm];
+      applyDir(activeT.meta && activeT.meta.dir ? activeT.meta.dir : 'ltr');
+      applyTranslations();
+      return true;
+    }
+
+    /**
+     * Fetch languages.json and initialise with browser language or 'en'.
+     * Shows a loading overlay while fetching; hides it afterward.
+     */
+    async function initI18n() {
+      try {
+        const resp = await fetch('./languages.json');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        i18nData = await resp.json();
+      } catch (err) {
+        console.warn('[TruthTube i18n] Could not load languages.json — using built-in EN fallback.', err);
+        /* Minimal EN fallback so the app still works offline / in file:// contexts */
+        i18nData = { en: {
+          meta: { code:'en', flag:'🇺🇸', name:'English', native:'English', dir:'ltr' },
+          header: { back:'Back', beta:'Beta' },
+          hero: { eyebrow:'AI-Powered Thumbnail Fact-Checker', line1:'Did you get', line2:'Clickbaited?' },
+          stats: { clickbaitRate:{ value:'68%', label:'Avg. Clickbait Rate' }, analysisSpeed:{ value:'5s', label:'Analysis Speed' }, deepAnalysis:{ value:'3', label:'Deep Analysis' } },
+          search: { placeholder:'Paste a YouTube URL here…', verifyBtn:'Verify', tryExample:'Try example', tryHint:'No real URL needed — see how it works' },
+          loading: { analyzing:'Analyzing', title:'Analyzing…', step1:{ label:'Collecting subtitles', sub:'Extracting transcript from video' }, step2:{ label:'AI language model analysis', sub:'Comparing thumbnail claim vs. content' }, step3:{ label:'Trust scoring', sub:'Calculating credibility index' } },
+          results: { analysisComplete:'Analysis Complete', aiGenerated:'AI-Generated Video', humanCreator:'Human Creator', thumbnailClaim:'Thumbnail claim', verdict:'Verdict', gradeHonest:'Honest', gradeNeutral:'Neutral', gradeDanger:'Danger', factScore:'Fact Score', credibilityIndex:'Credibility Index', duration:'Duration', contentMatch:'Content Match', aggroIndex:'Aggro Index', checkAnother:'Check another' },
+          deepDive: { triggerTitle:'Deep Dive Analysis', triggerSub:'Story breakdown · Full transcript · Top comments', tabSummary:'Story Summary', tabScript:'Full Script', tabComments:'Top Comments', summaryIntro:'Written in plain language — easy for anyone to understand.', transcriptLabel:'AI-extracted transcript', flaggedLabel:'Red = flagged claim', watchInstead:'Watch this instead', watchVerified:'Verified', watchCta:'Watch on YouTube', lowTrustScore:'Low trust score' },
+          footer: { copy:'© 2025 TruthTube. All rights reserved.', privacy:'Privacy', terms:'Terms', about:'About', contact:'Contact' }
+        }};
+      }
+
+      /* Detect preferred language from browser */
+      const browserLang = (navigator.language || 'en').toLowerCase().replace('_', '-');
+      const langCandidates = [browserLang, browserLang.split('-')[0], 'en'];
+      for (const c of langCandidates) {
+        if (i18nData[c]) { activeLang = c; activeT = i18nData[c]; break; }
+      }
+
+      applyDir(activeT.meta && activeT.meta.dir ? activeT.meta.dir : 'ltr');
+      applyTranslations();
+      buildLangDropdown();
+
+      /* Update selector display */
+      if (activeT.meta) {
+        document.getElementById('currentFlag').textContent = activeT.meta.flag || '🌐';
+        document.getElementById('currentLang').textContent = activeT.meta.name || activeLang;
+      }
+
+      /* Hide overlay */
+      const overlay = document.getElementById('i18nOverlay');
+      overlay.classList.add('hidden');
+      setTimeout(() => { overlay.style.display = 'none'; }, 450);
+
+      showView('home');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LANGUAGE SELECTOR
+    ══════════════════════════════════════════════════════════════ */
+    function buildLangDropdown() {
+      const dd = document.getElementById('langDropdown');
+      dd.innerHTML = Object.values(i18nData).map(lang => {
+        const meta = lang.meta || {};
+        const isActive = meta.code === activeLang;
+        return `
+          <div class="lang-option${isActive ? ' active' : ''}"
+            role="option" aria-selected="${isActive}"
+            data-code="${meta.code}"
+            onclick="selectLang('${meta.code}')"
+            onkeydown="if(event.key==='Enter'||event.key===' ')selectLang('${meta.code}')"
+            tabindex="0">
+            <span class="flag" aria-hidden="true">${meta.flag || '🌐'}</span>
+            <span class="lang-name">${meta.name || meta.code}</span>
+            <span class="lang-native">${meta.native || ''}</span>
+            <svg class="active-check" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <polyline points="1,6 4,9 11,2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>`;
+      }).join('');
+    }
+
+    function toggleLang() {
+      const dd  = document.getElementById('langDropdown');
+      const btn = document.getElementById('langBtn');
+      const cr  = document.getElementById('langCaret');
+      const open = dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+      cr.style.transform = open ? 'rotate(180deg)' : '';
+    }
+
+    function selectLang(code) {
+      if (!setLanguage(code)) return;
+      const meta = activeT.meta || {};
+      document.getElementById('currentFlag').textContent = meta.flag || '🌐';
+      document.getElementById('currentLang').textContent = meta.name || code;
+      document.getElementById('langDropdown').classList.remove('open');
+      document.getElementById('langBtn').setAttribute('aria-expanded', 'false');
+      document.getElementById('langCaret').style.transform = '';
+      buildLangDropdown();
+    }
+
+    document.addEventListener('click', e => {
+      const w = document.getElementById('langWrapper');
+      if (!w.contains(e.target)) {
+        document.getElementById('langDropdown').classList.remove('open');
+        document.getElementById('langBtn').setAttribute('aria-expanded', 'false');
+        document.getElementById('langCaret').style.transform = '';
+      }
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       VIEW MANAGEMENT
+    ══════════════════════════════════════════════════════════════ */
+    const views = {
+      home:    document.getElementById('viewHome'),
+      loading: document.getElementById('viewLoading'),
+      results: document.getElementById('viewResults'),
+    };
+
+    function showView(name) {
+      Object.keys(views).forEach(k => views[k].classList.remove('active', 'visible'));
+      const target = views[name];
+      target.classList.add('active');
+      document.getElementById('backBtn').classList.toggle('visible', name !== 'home');
+      requestAnimationFrame(() => requestAnimationFrame(() => target.classList.add('visible')));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome(e) {
+      if (e) e.preventDefault();
+      resetLoading();
+      collapseDeepDive();
+      showView('home');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LOADING SEQUENCE
+    ══════════════════════════════════════════════════════════════ */
+    let loadingTimers = [];
+
+    function resetLoading() {
+      loadingTimers.forEach(clearTimeout);
+      loadingTimers = [];
+      ['step1','step2','step3'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+      setProgress(0);
+    }
+
+    function setProgress(val) {
+      document.getElementById('progressFill').style.width = val + '%';
+      document.getElementById('progressPct').textContent  = val + '%';
+      document.getElementById('progressBar').setAttribute('aria-valuenow', val);
+    }
+
+    function runLoadingSequence(onComplete) {
+      resetLoading();
+      const s1 = document.getElementById('step1');
+      const s2 = document.getElementById('step2');
+      const s3 = document.getElementById('step3');
+
+      s1.classList.add('active'); setProgress(5);
+      loadingTimers.push(setTimeout(() => setProgress(20), 300));
+      loadingTimers.push(setTimeout(() => setProgress(33), 900));
+      loadingTimers.push(setTimeout(() => { s1.classList.remove('active'); s1.classList.add('done'); s2.classList.add('active'); setProgress(40); }, 1400));
+      loadingTimers.push(setTimeout(() => setProgress(55), 2000));
+      loadingTimers.push(setTimeout(() => setProgress(66), 2600));
+      loadingTimers.push(setTimeout(() => { s2.classList.remove('active'); s2.classList.add('done'); s3.classList.add('active'); setProgress(72); }, 3100));
+      loadingTimers.push(setTimeout(() => setProgress(85), 3700));
+      loadingTimers.push(setTimeout(() => setProgress(95), 4200));
+      loadingTimers.push(setTimeout(() => setProgress(100), 4700));
+      loadingTimers.push(setTimeout(() => {
+        s3.classList.remove('active'); s3.classList.add('done');
+        loadingTimers.push(setTimeout(onComplete, 500));
+      }, 5000));
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       GAUGE ANIMATION
+    ══════════════════════════════════════════════════════════════ */
+    function animateGauge(score) {
+      const fill  = document.getElementById('gaugeFill');
+      const label = document.getElementById('gaugeScoreText');
+      fill.style.strokeDashoffset = 220 - (score / 100) * 220;
+      const color = score >= 70 ? '#22c55e' : score >= 40 ? '#f97316' : '#E50914';
+      fill.style.stroke = color;
+      label.setAttribute('fill', color);
+      let current = 0;
+      const step = Math.ceil(score / 40);
+      const iv = setInterval(() => {
+        current = Math.min(current + step, score);
+        label.textContent = current;
+        if (current >= score) clearInterval(iv);
+      }, 30);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RENDER RESULTS
+    ══════════════════════════════════════════════════════════════ */
+    function renderResults(data) {
+      document.getElementById('resultClaim').textContent = data.claim;
+
+      const aiBadge = document.getElementById('aiGenBadge');
+      const aiText  = document.getElementById('aiGenText');
+      if (data.isAI) {
+        aiBadge.className = 'ai-gen-badge is-ai';
+        aiText.textContent = t('results.aiGenerated');
+        aiBadge.querySelector('svg').innerHTML = '<rect x="2" y="4" width="10" height="7" rx="1.5"/><path d="M5 4 V2.5 Q7 1 9 2.5 V4"/><circle cx="5" cy="7.5" r="0.8" fill="currentColor" stroke="none"/><circle cx="9" cy="7.5" r="0.8" fill="currentColor" stroke="none"/>';
+      } else {
+        aiBadge.className = 'ai-gen-badge not-ai';
+        aiText.textContent = t('results.humanCreator');
+      }
+
+      const gradeMap = {
+        honest:  t('results.gradeHonest'),
+        neutral: t('results.gradeNeutral'),
+        danger:  t('results.gradeDanger'),
+      };
+      const gradeCls = data.grade;
+      document.getElementById('gradeBadge').className   = 'grade-badge ' + gradeCls;
+      document.getElementById('gradeBadge').textContent = gradeMap[gradeCls];
+      document.getElementById('scoreGradeBadge').className   = 'grade-badge score-grade-badge ' + gradeCls;
+      document.getElementById('scoreGradeBadge').textContent = gradeMap[gradeCls];
+
+      const ul = document.getElementById('verdictBullets');
+      ul.innerHTML = data.bullets.map(b => {
+        const iconPath = b.type === 'ok'
+          ? '<polyline points="1,6 4,9 11,2"/>'
+          : b.type === 'warn'
+            ? '<path d="M6 2 L10 10 L2 10 Z"/><line x1="6" y1="5" x2="6" y2="7.5"/>'
+            : '<line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/>';
+        return `<li class="verdict-bullet"><span class="bullet-icon ${b.type}" aria-hidden="true"><svg viewBox="0 0 12 12">${iconPath}</svg></span><span>${b.text}</span></li>`;
+      }).join('');
+
+      document.getElementById('detailDuration').textContent = data.duration;
+      document.getElementById('detailMatch').textContent    = data.match;
+      document.getElementById('detailAggro').textContent    = data.aggro;
+
+      document.getElementById('gaugeFill').style.strokeDashoffset = '220';
+      document.getElementById('gaugeScoreText').textContent = '0';
+      setTimeout(() => animateGauge(data.score), 200);
+
+      renderDeepDive(data);
+      renderRecommendations(data);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       DEEP DIVE RENDER
+    ══════════════════════════════════════════════════════════════ */
+    function renderDeepDive(data) {
+      document.getElementById('summaryBlocks').innerHTML = data.summary.map((s, i) => `
+        <div class="dd-summary-block">
+          <div class="dd-block-num">${String(i + 1).padStart(2, '0')}</div>
+          <div class="dd-block-content">
+            <div class="dd-block-title">${s.title}</div>
+            <div class="dd-block-text">${s.text}</div>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('scriptBox').innerHTML = data.script.map(line => `
+        <div class="dd-script-line">
+          <span class="dd-script-ts">${line.ts}</span>
+          <span class="dd-script-text${line.flagged ? ' flagged' : ''}">${line.text}</span>
+        </div>`).join('');
+
+      document.getElementById('commentsList').innerHTML = data.comments.map(c => `
+        <div class="dd-comment">
+          <div class="dd-comment-header">
+            <div class="dd-comment-avatar" style="background:${c.color}22;color:${c.color};">${c.initials}</div>
+            <div class="dd-comment-meta">
+              <div class="dd-comment-name">${c.name}</div>
+              <div class="dd-comment-info">${c.likes} likes · Top comment</div>
+            </div>
+            <div class="dd-comment-tag ${c.tag}">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                ${c.tag === 'factcheck'
+                  ? '<polyline points="1,5 3.5,7.5 9,2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
+                  : c.tag === 'rebuttal'
+                    ? '<path d="M5 1 L9 9 L1 9 Z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/>'
+                    : '<rect x="1" y="1" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>'}
+              </svg>
+              ${c.tagLabel}
+            </div>
+          </div>
+          <div class="dd-comment-text">${c.text}</div>
+          <div class="dd-comment-footer">
+            <span class="dd-likes">
+              <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 12s-6-3.5-6-7a3 3 0 016 0 3 3 0 016 0c0 3.5-6 7-6 7z"/></svg>
+              ${c.likes}
+            </span>
+          </div>
+        </div>`).join('');
+
+      switchTab('Summary');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RENDER RECOMMENDATIONS
+    ══════════════════════════════════════════════════════════════ */
+    function renderRecommendations(data) {
+      const section = document.getElementById('recSection');
+      if (data.grade === 'honest' || !data.topic || data.recCount === 0) {
+        section.style.display = 'none'; return;
+      }
+      const pool  = ALT_VIDEOS[data.topic] || [];
+      const picks = pool.slice(0, data.recCount);
+      if (picks.length === 0) { section.style.display = 'none'; return; }
+
+      const isDanger = data.grade === 'danger';
+      document.getElementById('recHeaderSub').textContent = isDanger
+        ? 'This video scored very low for accuracy. Here are better alternatives on the same topic.'
+        : 'This video overstates its claims. These give a more complete picture.';
+      document.getElementById('recReasonText').textContent = isDanger
+        ? t('deepDive.lowTrustScore') + ': ' + data.score + '/100'
+        : 'Neutral — score: ' + data.score + '/100';
+
+      const watchCta      = t('deepDive.watchCta');
+      const watchVerified = t('deepDive.watchVerified');
+
+      document.getElementById('recGrid').innerHTML = picks.map(v => `
+        <div class="rec-card" role="listitem">
+          <div class="rec-thumb">
+            <div class="rec-thumb-bg" style="background:${v.gradient};"></div>
+            <div class="rec-thumb-pattern" aria-hidden="true"></div>
+            <div class="rec-thumb-gradient" aria-hidden="true"><span class="rec-thumb-initial">${v.initial}</span></div>
+            <div class="rec-verified-badge" aria-label="Verified accurate">
+              <svg viewBox="0 0 10 10" aria-hidden="true"><polyline points="1,5 3.5,7.5 9,2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              ${watchVerified}
+            </div>
+            <div class="rec-duration">${v.duration}</div>
+          </div>
+          <div class="rec-body">
+            <div class="rec-channel-row">
+              <div class="rec-channel-avatar" style="background:${v.chColor}22;color:${v.chColor};">${v.chInit}</div>
+              <span class="rec-channel-name">${v.channel}</span>
+              <div class="rec-channel-check" aria-label="Verified channel">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><polyline points="1,5 3.5,7.5 9,2" stroke="#60a5fa" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="rec-title">${v.title}</div>
+            <div class="rec-why">${v.why}</div>
+            <div class="rec-meta-row">
+              <span class="rec-meta-item">
+                <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"><circle cx="7" cy="7" r="6"/><polyline points="7,4 7,7.5 9.5,9"/></svg>
+                ${v.views}
+              </span>
+              <span class="rec-meta-item">
+                <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"><rect x="1" y="2" width="12" height="10" rx="1.5"/><line x1="1" y1="5.5" x2="13" y2="5.5"/><line x1="4.5" y1="1" x2="4.5" y2="4"/><line x1="9.5" y1="1" x2="9.5" y2="4"/></svg>
+                ${v.date}
+              </span>
+              <span class="rec-score-pill">${v.score}/100</span>
+            </div>
+          </div>
+          <a class="rec-cta" href="${v.url}" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="4,2 14,8 4,14" fill="currentColor" stroke="none"/></svg>
+            ${watchCta}
+          </a>
+        </div>`).join('');
+
+      section.style.display = 'block';
+      section.classList.remove('rec-section');
+      void section.offsetWidth;
+      section.classList.add('rec-section');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       DEEP DIVE ACCORDION
+    ══════════════════════════════════════════════════════════════ */
+    function toggleDeepDive() {
+      const trigger = document.getElementById('deepDiveTrigger');
+      const body    = document.getElementById('deepDiveBody');
+      const isOpen  = body.classList.toggle('open');
+      trigger.classList.toggle('open', isOpen);
+      trigger.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        setTimeout(() => {
+          trigger.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    }
+
+    function collapseDeepDive() {
+      document.getElementById('deepDiveTrigger').classList.remove('open');
+      document.getElementById('deepDiveBody').classList.remove('open');
+      document.getElementById('deepDiveTrigger').setAttribute('aria-expanded', 'false');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       TAB SWITCHING
+    ══════════════════════════════════════════════════════════════ */
+    function switchTab(name) {
+      const tabIds   = ['tabSummary', 'tabScript', 'tabComments'];
+      const panelIds = ['panelSummary', 'panelScript', 'panelComments'];
+      const nameMap  = { Summary: 0, Script: 1, Comments: 2 };
+      const idx      = nameMap[name];
+      tabIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.toggle('active', i === idx);
+        el.setAttribute('aria-selected', i === idx);
+      });
+      panelIds.forEach((id, i) => {
+        document.getElementById(id).classList.toggle('active', i === idx);
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       VERIFY FLOW
+    ══════════════════════════════════════════════════════════════ */
+    function handleVerify() {
+      const val = document.getElementById('urlInput').value.trim();
+      if (!val) { document.getElementById('urlInput').focus(); return; }
+      startAnalysis(val);
+    }
+
+    function tryExample() {
+      const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+      document.getElementById('urlInput').value = url;
+      startAnalysis(url);
+    }
+
+    function startAnalysis(url) {
+      document.getElementById('loadingUrlDisplay').textContent = url;
+      showView('loading');
+      const data = MOCK_RESULTS[Math.floor(Math.random() * MOCK_RESULTS.length)];
+      runLoadingSequence(() => {
+        renderResults(data);
+        showView('results');
+      });
+    }
+
+    function clearInput() {
+      const i = document.getElementById('urlInput');
+      i.value = ''; i.focus();
+    }
+
+    document.getElementById('urlInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleVerify();
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       BOOT — fetch translations then show UI
+    ══════════════════════════════════════════════════════════════ */
+    initI18n();
+  </script>
+</body>
+</html>
