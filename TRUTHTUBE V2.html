@@ -345,6 +345,286 @@
     .try-example-btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .try-hint { font-size: 12px; color: var(--text-muted); letter-spacing: 0; }
 
+    /* ══ PRICING SECTION ═════════════════════════════════════════════ */
+    .pricing-section {
+      width: 100%; max-width: 960px; margin-top: 80px;
+    }
+
+    /* Section eyebrow */
+    .pricing-eyebrow {
+      display: flex; align-items: center; gap: 18px; margin-bottom: 36px;
+    }
+    .pricing-eyebrow-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-medium), transparent);
+    }
+    .pricing-eyebrow-label {
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+    }
+    .pricing-eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--red);
+      box-shadow: 0 0 8px rgba(229,9,20,0.6);
+    }
+    .pricing-eyebrow-text {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 10px; font-weight: 400; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* 3-column grid — unified border */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Thin dividers between columns */
+    .plan-card + .plan-card {
+      border-left: 1px solid var(--border-card);
+    }
+
+    .plan-card {
+      background: #0d0d0d;
+      padding: 36px 28px 30px;
+      display: flex; flex-direction: column;
+      position: relative;
+      transition: background var(--transition);
+    }
+    .plan-card:hover { background: #111111; }
+
+    /* Featured (Standard) — slightly elevated */
+    .plan-card.featured {
+      background: #111111;
+      z-index: 1;
+    }
+    .plan-card.featured:hover { background: #141414; }
+
+    /* Top red accent line on featured card only */
+    .plan-card.featured::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(229,9,20,0.0) 10%,
+        var(--red) 35%,
+        var(--red) 65%,
+        rgba(229,9,20,0.0) 90%,
+        transparent 100%
+      );
+    }
+
+    /* Plan tier badge */
+    .plan-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 20px; padding: 4px 11px;
+      border-radius: var(--radius-pill); border: 1px solid;
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 9px; font-weight: 400; letter-spacing: 0.22em;
+      text-transform: uppercase; width: fit-content;
+    }
+    .plan-badge-dot {
+      width: 4px; height: 4px; border-radius: 50%; background: currentColor;
+      flex-shrink: 0;
+    }
+    .plan-badge.badge-free {
+      background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.08);
+      color: #555555;
+    }
+    .plan-badge.badge-standard {
+      background: rgba(229,9,20,0.07); border-color: rgba(229,9,20,0.22);
+      color: #ff6b73;
+    }
+    .plan-badge.badge-pro {
+      background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.11);
+      color: #999999;
+    }
+
+    /* Plan name */
+    .plan-name {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-weight: 700; font-size: 1.5rem;
+      line-height: 1; letter-spacing: -0.01em;
+      color: var(--text-primary); margin-bottom: 10px;
+    }
+
+    /* Plan description */
+    .plan-desc {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 13px; font-weight: 400; line-height: 1.6;
+      color: #666666; letter-spacing: 0;
+      margin-bottom: 28px; min-height: 40px;
+    }
+
+    /* Price block */
+    .plan-price-block {
+      display: flex; align-items: baseline; gap: 3px;
+      padding: 20px 0; margin-bottom: 20px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .plan-currency {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 16px; font-weight: 400;
+      color: var(--text-secondary); letter-spacing: 0;
+      align-self: flex-start; padding-top: 6px;
+    }
+    .plan-price-num {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 3rem; font-weight: 700; line-height: 1;
+      letter-spacing: -0.04em; color: var(--text-primary);
+    }
+    .plan-price-decimal {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 1.3rem; font-weight: 400; line-height: 1;
+      letter-spacing: -0.02em; color: var(--text-secondary);
+      align-self: flex-end; padding-bottom: 4px;
+    }
+    .plan-period {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 11.5px; font-weight: 400; color: var(--text-muted);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      align-self: flex-end; padding-bottom: 5px; margin-left: 3px;
+    }
+
+    /* Feature list */
+    .plan-features {
+      list-style: none; display: flex; flex-direction: column;
+      gap: 11px; margin-bottom: 28px; flex: 1;
+    }
+    .plan-feature {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 13px; font-weight: 400; line-height: 1.5;
+      color: #b0b0b0; letter-spacing: 0;
+    }
+    .plan-feature.dimmed {
+      color: #3a3a3a;
+    }
+    .feature-icon {
+      flex-shrink: 0; margin-top: 2px;
+      width: 14px; height: 14px;
+    }
+    .feature-icon svg {
+      width: 14px; height: 14px;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; fill: none;
+    }
+    .plan-feature:not(.dimmed) .feature-icon svg { stroke: var(--green); }
+    .plan-feature.dimmed .feature-icon svg { stroke: #333333; }
+
+    /* CTA buttons */
+    .plan-cta {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; width: 100%; padding: 13px 16px;
+      border-radius: var(--radius-md); border: 1px solid;
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background var(--transition), border-color var(--transition),
+                  color var(--transition), box-shadow var(--transition),
+                  transform 0.12s ease;
+      text-decoration: none; white-space: nowrap;
+    }
+    .plan-cta:active { transform: scale(0.98); }
+
+    .cta-ghost {
+      background: transparent;
+      border-color: rgba(255,255,255,0.09);
+      color: #555555;
+    }
+    .cta-ghost:hover {
+      border-color: rgba(255,255,255,0.20);
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+    }
+    .cta-featured {
+      background: var(--red);
+      border-color: var(--red);
+      color: #ffffff;
+      box-shadow: 0 4px 24px rgba(229,9,20,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .cta-featured:hover {
+      background: #ff1a26;
+      border-color: #ff1a26;
+      box-shadow: 0 6px 32px rgba(229,9,20,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .cta-outline {
+      background: transparent;
+      border-color: rgba(255,255,255,0.14);
+      color: var(--text-secondary);
+    }
+    .cta-outline:hover {
+      border-color: rgba(255,255,255,0.28);
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.04);
+    }
+    .plan-cta svg {
+      width: 11px; height: 11px; stroke: currentColor;
+      stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* Billing toggle area */
+    .pricing-billing-note {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 18px;
+    }
+    .billing-badge {
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.22);
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.10em;
+      text-transform: uppercase; color: var(--green);
+    }
+    .billing-text {
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 11.5px; color: var(--text-muted); letter-spacing: 0;
+    }
+
+    /* Footnote */
+    .pricing-footnote {
+      margin-top: 20px; text-align: center;
+      font-family: 'Calibri', 'Segoe UI', Georgia, serif;
+      font-size: 11px; font-weight: 400; color: #3a3a3a;
+      letter-spacing: 0.04em; line-height: 1.8;
+    }
+    .pricing-footnote a {
+      color: #555555; text-decoration: none;
+      border-bottom: 1px solid #333333;
+      padding-bottom: 1px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .pricing-footnote a:hover { color: var(--text-secondary); border-color: var(--text-secondary); }
+
+    /* RTL pricing overrides */
+    html[dir="rtl"] .pricing-eyebrow { flex-direction: row-reverse; }
+    html[dir="rtl"] .pricing-eyebrow-label { flex-direction: row-reverse; }
+    html[dir="rtl"] .plan-card + .plan-card { border-left: none; border-right: 1px solid var(--border-card); }
+    html[dir="rtl"] .plan-badge { flex-direction: row-reverse; }
+    html[dir="rtl"] .plan-feature { flex-direction: row-reverse; text-align: right; }
+    html[dir="rtl"] .plan-price-block { flex-direction: row-reverse; }
+    html[dir="rtl"] .plan-desc,
+    html[dir="rtl"] .plan-name,
+    html[dir="rtl"] .plan-features { text-align: right; }
+
+    /* Responsive — stack to single column on mobile */
+    @media (max-width: 720px) {
+      .pricing-section { max-width: 100%; }
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        border-radius: var(--radius-lg);
+      }
+      .plan-card + .plan-card { border-left: none; border-top: 1px solid var(--border-card); }
+      .plan-card { padding: 28px 22px 24px; }
+      .plan-desc { min-height: auto; }
+      .plan-card.featured::before { left: 0; right: 0; }
+    }
+
     /* ══ VIEW 2 — LOADING ════════════════════════════════════════════ */
     #viewLoading { justify-content: center; align-items: flex-start; }
     .loading-wrap { width: 100%; max-width: 560px; }
@@ -709,6 +989,185 @@
         <span class="try-hint" data-i18n="search.tryHint">No real URL needed — see how it works</span>
       </div>
     </section>
+
+    <!-- ════ PRICING SECTION ════ -->
+    <section class="pricing-section" aria-labelledby="pricingHeading">
+
+      <!-- Eyebrow -->
+      <div class="pricing-eyebrow" role="presentation">
+        <div class="pricing-eyebrow-line" aria-hidden="true"></div>
+        <div class="pricing-eyebrow-label">
+          <span class="pricing-eyebrow-dot" aria-hidden="true"></span>
+          <span class="pricing-eyebrow-text" id="pricingHeading">Choose Your Plan</span>
+        </div>
+        <div class="pricing-eyebrow-line" aria-hidden="true"></div>
+      </div>
+
+      <!-- 3-column card grid -->
+      <div class="pricing-grid" role="list" aria-label="Pricing plans">
+
+        <!-- ── FREE PLAN ── -->
+        <article class="plan-card" role="listitem" aria-label="Free plan">
+
+          <div class="plan-badge badge-free">
+            <span class="plan-badge-dot" aria-hidden="true"></span>Free
+          </div>
+
+          <div class="plan-name">Free Plan</div>
+          <div class="plan-desc">For casual viewers exploring TruthTube for the first time.</div>
+
+          <div class="plan-price-block" aria-label="Price: Free">
+            <span class="plan-currency" aria-hidden="true">$</span>
+            <span class="plan-price-num">0</span>
+            <span class="plan-period">/ mo</span>
+          </div>
+
+          <ul class="plan-features" aria-label="Free plan included features">
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              3 video checks per day
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Fact Score + Grade
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Basic verdict summary
+            </li>
+            <li class="plan-feature dimmed" aria-label="Not included">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></span>
+              Deep Dive Analysis
+            </li>
+            <li class="plan-feature dimmed" aria-label="Not included">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></span>
+              Full transcript view
+            </li>
+            <li class="plan-feature dimmed" aria-label="Not included">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></span>
+              Alternative recommendations
+            </li>
+          </ul>
+
+          <button class="plan-cta cta-ghost" type="button" onclick="handleVerify()" aria-label="Get started free">
+            Get Started Free
+          </button>
+        </article>
+
+        <!-- ── STANDARD PASS ── -->
+        <article class="plan-card featured" role="listitem" aria-label="Standard Pass — most popular">
+
+          <div class="plan-badge badge-standard">
+            <span class="plan-badge-dot" aria-hidden="true"></span>Most Popular
+          </div>
+
+          <div class="plan-name">Standard Pass</div>
+          <div class="plan-desc">For regular viewers who want deeper insight on what they watch.</div>
+
+          <div class="plan-price-block" aria-label="Price: $4.99 per month">
+            <span class="plan-currency" aria-hidden="true">$</span>
+            <span class="plan-price-num">4</span>
+            <span class="plan-price-decimal">.99</span>
+            <span class="plan-period">/ mo</span>
+          </div>
+
+          <ul class="plan-features" aria-label="Standard Pass included features">
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              20 video checks per day
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Fact Score + Grade
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Deep Dive Analysis
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Full transcript view
+            </li>
+            <li class="plan-feature dimmed" aria-label="Not included">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></span>
+              Alternative recommendations
+            </li>
+            <li class="plan-feature dimmed" aria-label="Not included">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></span>
+              17-language interface support
+            </li>
+          </ul>
+
+          <button class="plan-cta cta-featured" type="button" onclick="handleVerify()" aria-label="Get Standard Pass for $4.99 per month">
+            Get Standard Pass
+          </button>
+        </article>
+
+        <!-- ── PRO PASS ── -->
+        <article class="plan-card" role="listitem" aria-label="Pro Pass">
+
+          <div class="plan-badge badge-pro">
+            <span class="plan-badge-dot" aria-hidden="true"></span>Full Access
+          </div>
+
+          <div class="plan-name">Pro Pass</div>
+          <div class="plan-desc">For researchers, journalists, and media-literate power users.</div>
+
+          <div class="plan-price-block" aria-label="Price: $9.99 per month">
+            <span class="plan-currency" aria-hidden="true">$</span>
+            <span class="plan-price-num">9</span>
+            <span class="plan-price-decimal">.99</span>
+            <span class="plan-period">/ mo</span>
+          </div>
+
+          <ul class="plan-features" aria-label="Pro Pass included features">
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Unlimited video checks
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Fact Score + Grade
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Full Deep Dive Analysis
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Full transcript + flagged claims
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              Alternative recommendations
+            </li>
+            <li class="plan-feature">
+              <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><polyline points="1,7 4.5,10.5 13,2"/></svg></span>
+              17-language interface support
+            </li>
+          </ul>
+
+          <button class="plan-cta cta-outline" type="button" onclick="handleVerify()" aria-label="Get Pro Pass for $9.99 per month">
+            Get Pro Pass
+          </button>
+        </article>
+
+      </div>
+
+      <!-- Annual savings note -->
+      <div class="pricing-billing-note" aria-label="Save 20% with annual billing">
+        <span class="billing-badge">Save 20%</span>
+        <span class="billing-text">on all paid plans when billed annually</span>
+      </div>
+
+      <p class="pricing-footnote">
+        No contracts &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp;
+        <a href="#">Compare all features</a>
+      </p>
+
+    </section>
+    <!-- ════ END PRICING ════ -->
+
   </main>
 
   <!-- ════════ VIEW 2: LOADING ════════ -->
